@@ -1,0 +1,33 @@
+{{- range $.Values.AppComponents -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Name }}-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Name  }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Name  }}
+    spec:
+      containers:
+        - name: {{ .Name  }}
+          image: "{{ $.Values.ImageRegistry }}{{ $.Values.AppName }}-{{ .Name }}"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Name  }}-srv
+spec:
+  selector:
+    app: {{ .Name  }}
+  ports:
+    - name: {{ .Name  }}
+      protocol: TCP
+      port: {{ .Port }}
+      targetPort: {{ .Port }}
+---
+{{- end }}

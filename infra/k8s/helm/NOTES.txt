@@ -1,0 +1,5 @@
+helm template . --output-dir .yamls
+
+helm upgrade blog-release . --install --dry-run --debug --namespace blog
+
+helm upgrade blog-release . --install --namespace blog

@@ -1,0 +1,27 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: {{ $.Values.AppName }}-gateway-vs
+  namespace: {{ $.Values.Namespace }}
+spec:
+  hosts:
+  - "{{ $.Values.AppName }}-local.dotnet-works.com"
+  gateways:
+  - {{ $.Values.IstioGateway }}
+  http:
+  {{- range $.Values.AppComponents }}
+  {{- if .Match }}
+  - match:
+    - uri:
+        {{ .Match }}
+    {{- if .Rewrite }}
+    rewrite:
+      {{ .Rewrite }}
+    {{- end }}
+    route:
+    - destination:
+        host: '{{ .Name }}-srv.{{ $.Values.Namespace }}.svc.cluster.local'
+        port:
+          number: {{ .Port }}
+  {{- end }}
+  {{- end }}

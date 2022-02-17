@@ -1,0 +1,24 @@
+ImageRegistry: localhost:5001/
+IstioGateway: istio-system/istio-gateway
+AppName: blog
+Namespace: blog
+AppComponents:
+  - Name: posts
+    Match: 'prefix: /api/posts/create'
+    Rewrite: 'uri: /posts/create'
+    Port: 4000
+  - Name: query
+    Match: 'exact: /api/posts'
+    Rewrite: 'uri: /posts'
+    Port: 4002
+  - Name: comments
+    Match: 'prefix: "/api/posts/" # for /posts/?(.*)/comments'
+    Rewrite: 'uri: /posts/'
+    Port: 4001
+  - Name: client
+    Match: 'regex: /?(.*)'
+    Port: 3000
+  - Name: event-bus
+    Port: 4005
+  - Name: moderation
+    Port: 4003
