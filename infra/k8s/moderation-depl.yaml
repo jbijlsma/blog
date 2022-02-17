@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: moderation
-          image: cygnetops/moderation-84
+          image: localhost:5001/blog-moderation
 ---
 apiVersion: v1
 kind: Service
